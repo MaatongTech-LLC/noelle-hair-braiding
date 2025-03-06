@@ -61,10 +61,10 @@
                                         </div>
                                     @enderror
                                 </div>
-                                
+
                                 <div class="col-md-12 form-group">
                                     <label for="image" class="form-label custom-file-input">Choose service image showcase</label>
-                                    <input class="form-control" type="file" name="image_url" id="image" required>
+                                    <input class="form-control" type="file" name="image_url" id="image">
                                     @error('image_url')
                                         <div class="invalid-feedback">
                                             {{ $message }}

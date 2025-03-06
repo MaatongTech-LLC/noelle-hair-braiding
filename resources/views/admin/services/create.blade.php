@@ -62,7 +62,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="duration">Duration</label>
-                                    <input type="time" name="duration" id="duration" class="form-control" placeholder="Ex: 2:30" required>
+                                    <input type="text" name="duration" id="duration" class="form-control" placeholder="Ex: 2:30" required>
                                     @error('duration')
                                         <div class="invalid-feedback">
                                             {{ $message }}

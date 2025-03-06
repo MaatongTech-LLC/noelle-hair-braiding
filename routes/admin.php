@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Middleware\CustomAuth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\AdminMiddleware;
@@ -72,6 +73,9 @@ Route::group(['prefix' => 'administration', 'middleware' => [CustomAuth::class, 
     // Payments routes
     Route::get('/payments', [PaymentController::class, 'index'])->name('admin.payments.index');
     Route::get('/payments/{id}', [PaymentController::class, 'show'])->name('admin.payments.show');
+
+    Route::get('/profile', [ProfileController::class, 'index'])->name('admin.profile.index');
+    Route::put('/profile/{id}', [ProfileController::class, 'update'])->name('admin.profile.update');
 });
 
 

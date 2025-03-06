@@ -30,7 +30,9 @@
     <link href="{{ asset('assets/css/magnific-popup.css')}}" rel="stylesheet">
     <!-- Main custom css -->
     <link href="{{ asset('assets/css/custom.css')}}" rel="stylesheet" media="screen">
-    </head>
+
+    @stack('styles')
+</head>
 
 <body class="tt-magic-cursor">
 
@@ -56,7 +58,7 @@
             <div class="container">
                 <!-- Logo Start -->
                 <a class="navbar-brand" href="{{ route('home') }}">
-                    <img height="100px" src="{{ asset('assets/images/logo.png') }}" alt="Logo">
+                    <img height="135px" src="{{ asset('assets/images/logo.png') }}" alt="Logo">
                 </a>
                 <!-- Logo End -->
 
@@ -67,16 +69,67 @@
                         <li class="nav-item {{ request()->routeIs('about') ? 'active' : '' }}"><a class="nav-link" href="{{ route('about') }}">About us</a></li>
                         <li class="nav-item {{ request()->routeIs('services') || request()->routeIs('service.show') ? 'active' : '' }}"><a class="nav-link" href="{{ route('services') }}">Services</a></li>
                         <li class="nav-item {{ request()->routeIs('gallery') ? 'active' : '' }}"><a class="nav-link" href="{{ route('gallery') }}">Our Work</a></li>
+                        <li class="nav-item {{ request()->routeIs('shop') ? 'active' : '' }}"><a class="nav-link" href="{{ route('shop') }}">Shop</a></li>
                         <li class="nav-item {{ request()->routeIs('contact') ? 'active' : '' }}"><a class="nav-link" href="{{ route('contact') }}">Contact</a></li>
+{{--
                         <li class="nav-item {{ request()->routeIs('booking.post') ? 'active' : '' }} highlighted-menu"><a class="nav-link" href="#">Book Now</a></li>
+--}}
 
                         @auth
-                            <li class="nav-item  highlighted-menu"><a class="nav-link" href="{{ route('customer.dashboard') }}">My Account</a></li>
+                            <li class="nav-item  highlighted-menu"><a class="nav-link" href="{{ auth()->user()->role === 'admin' ? route('admin.dashboard') : route('customer.dashboard')}}">My Account</a></li>
                         @endauth
                         @guest
                             <li class="nav-item {{ request()->routeIs('login') || request()->routeIs('register') ? 'active' : '' }} highlighted-menu"><a class="nav-link" href="{{ route('login') }}">Login / Register</a></li>
                         @endguest
+                        @php
+                            $subTotal = 0;
+                            if(Auth::check()) {
+                                $items = auth()->user()->cart()->with('product')->get();
+                            } else {
+                                $items = collect(Session::get('cart', []));
+                            }
+                        @endphp
+                        <li class="nav-item submenu"><a class="nav-link" href="#"><img src="{{ asset('assets/images/icon-shopping-cart.svg') }}" height="15px" alt=""><sup style="font-weight: bold;">{{count($items)}}</sup></a>
+                            <ul style="width: 250px;">
 
+                                @forelse($items as $item)
+                                    @php
+                                        if(is_array($item)) {
+                                             $item = (object) $item;
+                                        }
+                                        $subTotal += ($item->product->price * $item->quantity);
+                                    @endphp
+                                    <li>
+                                        <a class="dropdown-item d-flex align-items-center justify-content-between px-2" href="javascript:void(0)">
+                                            <img src="{{ $item->product->getImage() }}" height="35px" alt="">
+                                            <div class="text d-flex align-items-center g-1 px-2">
+                                               <div class="mx-2">
+                                                   <span class="text-capitalize">{{ $item->product->name }}</span><br>
+                                                   <span class="price">Price: ${{ $item->product->price }}</span> <br>
+                                                   <span class="quantity">Qty: {{ $item->quantity }}</span><br>
+                                               </div>
+                                                <form action="{{ route('cart.delete', $item->product_id) }}" method="post">
+                                                    @method('DELETE')
+                                                    @csrf
+                                                    <button type="submit" style="color: white; background-color: var(--color-pink);" class="close border-0 btn btn-sm btn-danger delete-item" data-name="{{ $item->product->name }}">
+                                                        <i class="fa-regular fa-trash-can"></i>
+                                                    </button>
+                                                </form>
+
+                                            </div>
+                                        </a>
+                                    </li>
+                                @empty
+                                    <li class="mx-auto text-center"><strong>Your Cart Is Empty</strong></li>
+                                @endforelse
+                                @if(count($items) > 0)
+                                        <div class="px-2 mt-2 d-flex justify-content-between align-items-center">
+                                            <a class="btn-default" style="background-color: #0a0c0d; color: #FFF;" href="{{ route('checkout', ['checkout_type' => 'products_order']) }}">Checkout</a>
+                                            <a class="btn-default" style="background-color: #0a0c0d; color: #FFF;" href="{{ route('cart') }}">Cart</a>
+                                        </div>
+                                @endif
+                            </ul>
+                        </li>
                     </ul>
                 </div>
                 <!-- Main Menu End -->
@@ -149,7 +202,7 @@
                 <div class="col-lg-5">
                     <!-- Footer Logo Start -->
                     <div class="footer-logo">
-                        <img src="{{ asset('assets/images/logo.png') }}" height="100px" alt="">
+                        <img src="{{ asset('assets/images/logo.png') }}" height="135px" alt="">
                     </div>
                     <!-- Footer Logo End -->
 
@@ -220,6 +273,8 @@
 <script src="{{ asset('assets/js/wow.js') }}"></script>
 <!-- Main Custom js file -->
 <script src="{{ asset('assets/js/function.js') }}"></script>
+<script src="{{ asset('assets/js/jquery.datetimepicker.min.js') }}"></script>
+
 
 <script src="{{ asset('assets/js/notify.min.js') }}"></script>
 

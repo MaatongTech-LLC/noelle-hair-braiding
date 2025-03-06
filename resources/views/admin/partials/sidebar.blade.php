@@ -1,6 +1,6 @@
 <aside class="sidebar sidebar-default sidebar-white sidebar-base navs-rounded-all bg-dark">
     <div class="sidebar-header d-flex align-items-center justify-content-center">
-        <a href="{{ route('admin.dashboard') }}" class="navbar-brand overflow-hidden">
+        <a href="{{ auth()->user()->role === 'admin' ? route('admin.dashboard') : route('customer.dashboard') }}" class="navbar-brand overflow-hidden">
             <!--Logo start-->
             <img src="{{ asset('assets/images/logo.png') }}" style="object-fit:contain;" height="125" width="125" alt="">
             <!--logo End-->

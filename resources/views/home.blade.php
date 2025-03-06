@@ -17,7 +17,7 @@
                         </div>
 
                         <div class="hero-content-footer wow fadeInUp" data-wow-delay="0.75s">
-                            <a href="#" class="btn-default dark-bg">Book Now</a>
+                            <a href="{{ route('services') }}" class="btn-default dark-bg">Book Now</a>
                             <a href="{{ route('contact') }}" class="btn-default dark-bg">Contact Now</a>
                         </div>
                     </div>

@@ -71,7 +71,7 @@ class PaymentService {
 
     }
 
-    public function processStripe($entity, $paymentMethodId)
+    public function processStripe($entity, $stripeToken)
     {
         try {
             Stripe::setApiKey(env('STRIPE_SECRET'));
@@ -82,14 +82,12 @@ class PaymentService {
                 $amount = $entity->total_price;
             }
 
-            $paymentIntent = PaymentIntent::create([
+            $charge = Charge::create([
                 'amount' => $amount * 100,
                 'currency' => 'usd',
-                'payment_method' => $paymentMethodId,
-                'confirm' => true,
+                'description' => config('app.name') . ' - Order #' . $entity->id,
+                'source' => $stripeToken,
             ]);
-
-            //$entity->update(['status' => 'Paid']);
 
             // Store payment record
             Payment::create([
@@ -97,12 +95,12 @@ class PaymentService {
                 'payment_method' => 'stripe',
                 'amount' => $amount,
                 'status' => 'pending',
-                'transaction_id' => $paymentIntent->id,
+                'transaction_id' => $charge->id,
                 'payable_id' => $entity->id,
                 'payable_type' => get_class($entity),
             ]);
 
-            return $paymentIntent;
+           return $charge->status;
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }

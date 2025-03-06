@@ -36,6 +36,6 @@ class Product extends Model
 
     public function getImage()
     {
-        return $this->image_url == null ? asset('assets/uploads/logo/logo.png') : Storage::url($this->image_url);
+        return $this->image_url == null ? asset('assets/images/logo.png') : Storage::url($this->image_url);
     }
 }

@@ -72,28 +72,22 @@ class HomeController extends Controller
 
     public function shop(Request $request)
     {
-        $products = Product::with('category')->latest();
 
-        if ($request->search) {
-            $products = Product::with('category')->where('name', 'LIKE', '%'.$request->search.'%')->latest();
+        if ($request->category_id) {
+            $products = Product::where('product_category_id', $request->category_id)->latest();
+        } else {
+            $products = Product::with('category')->latest();
+
         }
+        $categories = ProductCategory::all();
 
-        if ($request->min_price && $request->max_price) {
-            $products = $products->whereBetween('price', [$request->min_price, $request->max_price]);
-        }
+        $products = $products->paginate(12);
 
-
-        $products = $products->paginate(16);
-        $categories = ProductCategory::whereIn('id', $products->pluck('category_id')->unique())->get();
-
-        $minPrice = Product::min('price');
-        $maxPrice = Product::max('price');
 
         return view('shop', [
             'categories' => $categories,
             'products' => $products,
-            'minPrice' => $minPrice,
-            'maxPrice' => $maxPrice
+
         ]);
     }
 
@@ -112,12 +106,21 @@ class HomeController extends Controller
     public function checkoutAppointmentPost(Request $request)
     {
         $validated = $request->validate([
-            'appointment_id' => 'required',
+            'service_id' => 'required',
             'email' => 'required',
+            'date' => 'required|date',
+            'time' => 'required|date_format:H:i',
             'gateway' => 'required',
+            'payment_type' => 'required|string',
         ]);
 
-        $appointment = Appointment::find($validated['appointment_id']);
+        $appointment = Appointment::create([
+            'service_id' => $request->service_id,
+            'user_id' => Auth::id(),
+            'date' => $request->date,
+            'time' => $request->time,
+            'payment_type' => $request->payment_type,
+        ]);
 
         if ($validated['gateway'] === 'paypal') {
             $paymentUrl = $this->paymentService->processPayPal($appointment);
@@ -125,12 +128,18 @@ class HomeController extends Controller
             if ($paymentUrl !== null) {
                 return redirect()->away($paymentUrl);
             } else {
-                toast('Something went wrong while processing PayPal payment');
-                return redirect()->back();
+
+                return redirect()->back()->with('error', 'Something went wrong while processing PayPal payment');
             }
 
         } elseif ($validated['gateway'] === 'stripe') {
+            $paymentStatusStripe = $this->paymentService->processStripe($appointment, $request->stripeToken);
 
+            if ($paymentStatusStripe === 'succeeded') {
+                return redirect()->route('customer.booking.show', $appointment->id)->with('success', 'Credit/Debit card payment successful');
+            } else {
+                return redirect()->back()->with('error', 'Something went wrong while processing card payment');
+            }
         }
     }
 
@@ -138,6 +147,7 @@ class HomeController extends Controller
     {
         $request->validate([
             'email' => 'required|email',
+            'name' => 'required',
             'gateway' => 'required',
             'user_id' => 'required',
             'total_price' => 'required',
@@ -146,17 +156,15 @@ class HomeController extends Controller
         $user = Auth::user();
 
         if (!$user) {
-            toast('Please login to checkout.', 'error');
 
-            return redirect()->route('login');
+            return redirect()->route('login')->with('error', 'Login first to checkout');
         }
 
         $cartItems = $user->cart()->with('product')->get();
 
         if ($cartItems->isEmpty()) {
-            toast('Your cart is empty.', 'error');
 
-            return redirect()->route('cart.index');
+            return redirect()->route('cart')->with('error', 'Your cart is empty!');
         }
 
         $totalPrice = $cartItems->sum(function ($cartItem) {
@@ -193,15 +201,21 @@ class HomeController extends Controller
                 if ($paymentUrl !== null) {
                     return redirect()->away($paymentUrl);
                 } else {
-                    toast('Something went wrong while processing PayPal payment', 'error');
-                    return redirect()->back()->with('error', );
-                }            } else {
-                $this->paymentService->processStripe($order, $request->payment_method_id);
+                    return redirect()->back()->with('error', 'Something went wrong while processing PayPal payment');
+                }
+            } else {
+                $paymentStatusStripe = $this->paymentService->processStripe($order, $request->stripeToken);
+
+                if ($paymentStatusStripe === 'succeeded') {
+                    return redirect()->route('customer.orders.show', $order->id)->with('success', 'Credit/Debit card payment successful');
+                } else {
+                    return redirect()->back()->with('error', 'Something went wrong while processing card payment');
+                }
             }
         } catch (\Exception $e) {
             DB::rollback();
-            with('Checkout failed: ' . $e->getMessage(), 'error');
-            return redirect()->route('cart');
+
+            return redirect()->route('cart')->with('error', 'Checkout failed: ' . $e->getMessage());
         }
 
     }
@@ -222,27 +236,27 @@ class HomeController extends Controller
                     $payment->update(['status' => 'successful']);
                     $order = $payment->payable;
                     $order->update(['payment_status' => 'paid']);
+
+                    return redirect()->route('customer.orders.show', $order->id)->with('success', 'Payment completed!');
+
                 } else {
                     $payment->update(['status' => 'successful']);
                     $appointment = $payment->payable;
                     $appointment->update(['status' => 'completed']);
+
+                    return redirect()->route('customer.booking.show', $appointment->id)->with('success', 'Payment completed!');
                 }
             }
 
-            toast('Payment successful');
 
-            return redirect()->route('home');
         } else {
-            toast('Something went wrong!', 'error');
-
-            return redirect()->route('home');
+            return redirect()->route('home')->with('error', 'Something went wrong!');
         }
     }
 
     public function paypalCancel(Request $request)
     {
-        toast('You have cancelled the transaction!', 'error');
-        return redirect()->back();
+        return redirect()->back()->with('error', 'Payment cancelled!');
     }
 
     public function contact()

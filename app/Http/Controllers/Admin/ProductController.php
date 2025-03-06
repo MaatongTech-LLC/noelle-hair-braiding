@@ -49,6 +49,7 @@ class ProductController extends Controller
             'product_category_id' => 'required|exists:product_categories,id',
         ]);
 
+
         if ($request->hasFile('image_url')) {
             $data['image_url'] = $request->file('image_url')->store('product-images', 'public');
         }
@@ -83,7 +84,7 @@ class ProductController extends Controller
     public function destroy($id)
     {
         Product::destroy($id);
-        
+
         return redirect()->back()->with('success', 'Product deleted successfully.');
     }
 }

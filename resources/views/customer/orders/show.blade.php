@@ -33,7 +33,7 @@ Order {{ '' }}
                     <!--Order Detail-->
                     <div class="row justify-content-between align-items-center g-3 mb-4">
                         <div class="col-auto flex-grow-1">
-                            <img src="{{ asset('assets/uploads/logo/logo.png') }}"
+                            <img src="{{ asset('assets/images/logo.png') }}"
                                 alt="logo" class="img-fluid" width="200">
                         </div>
                         <div class="col-auto text-end">
@@ -82,7 +82,7 @@ Order {{ '' }}
                                     <p class="mb-0 text-wrap">{{ $order->billing_address ?? 'Unknown' }}</p>
                                 </div>
                             </div>
-                           
+
                         </div>
                     </div>
                 </div>
@@ -132,7 +132,7 @@ Order {{ '' }}
                             </tr>
                             @php $subtotal += $itemTotal; @endphp
                         @endforeach
-                        
+
                     </tbody>
                     <tfoot class="text-end">
                         <tr>
@@ -142,7 +142,7 @@ Order {{ '' }}
                             <td width="10%">
                                 <strong>${{ number_format($subtotal, 2) }}</strong></td>
                         </tr>
-                    
+
                         <tr>
                             <td colspan="4">
                                 <h6 class="d-inline-block me-3">Delivery Charge: </h6>

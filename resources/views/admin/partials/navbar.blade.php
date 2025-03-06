@@ -85,10 +85,11 @@
                         </div>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        {{--<li><a class="dropdown-item" href="#">Profile</a></li>
-                        <li><hr class="dropdown-divider"></li>--}}
+                        <li><a class="dropdown-item" href="{{ route('admin.profile.index') }}">Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
                         <li>
-                            <form action="{{ route('logout') }}" method="POST">@csrf
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
                                 <button class="dropdown-item" type="submit">Logout</button>
                             </form>
                         </li>

@@ -24,12 +24,14 @@ class ProductCategoryController extends Controller
 
         ProductCategory::create($validated);
 
-        return redirect()->route('admin.serviceCategories.index')->with('success', 'Category created successfully.');
+        toast('Successfully Created!', 'success');
+
+        return redirect()->route('admin.categories.index')->with('success', 'Category created successfully.');
     }
 
     public function create()
     {
-        return view('admin.service-categories.create');
+        return view('admin.product-categories.create');
     }
 
     public function update(Request $request, $id)
@@ -41,20 +43,20 @@ class ProductCategoryController extends Controller
         $category = ProductCategory::findOrFail($id);
         $category->update($validated);
 
-        return redirect()->route('admin.serviceCategories.index')->with('success', 'Category updated successfully.');
+        return redirect()->route('admin.categories.index')->with('success', 'Category updated successfully.');
     }
 
     public function edit(Request $request, $id)
     {
         $category = ProductCategory::findOrFail($id);
 
-        return view('admin.service-categories.edit', ['category' => $category]);
+        return view('admin.product-categories.edit', ['category' => $category]);
     }
 
     public function destroy($id)
     {
         ProductCategory::destroy($id);
-       
-        return redirect()->route('admin.serviceCategories.index')->with('success', 'Category deleted successfully.');
+
+        return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully.');
     }
 }
