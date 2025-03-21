@@ -7,7 +7,7 @@
     <title>{{ config('app.name') }} |  @yield('title')</title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="{{ asset('assets/images/logo.png') }}" />
+    <link rel="shortcut icon" href="{{ asset('assets/favicon.ico') }}" />
 
     <!-- Library / Plugin Css Build -->
     <link rel="stylesheet" href="{{ asset('admin/assets/css/core/libs.min.css') }}" />
@@ -21,10 +21,9 @@
     <!-- Custom Css -->
     <link rel="stylesheet" href="{{ asset('admin/assets/css/custom.min.css') }}" />
 
-    <link rel="stylesheet" href="{{ asset('admin/assets/css/customizer.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
-
-    @include('sweetalert::alert')
+    
     <style>
         .fc-button {
             text-transform: capitalize!important;
@@ -43,7 +42,7 @@
 <!-- loader END -->
 
 @include('admin.partials.sidebar')
-<main class="main-content bg-dark">
+<main class="main-content">
     <div class="position-relative iq-banner">
         <!--Nav Start-->
         @include('admin.partials.navbar')
@@ -71,7 +70,7 @@
     @yield('content')
 
     <!-- Footer Section Start -->
-    <footer class="footer bg-dark">
+    <footer class="footer">
         <div class="footer-body">
             <div class="right-panel">
                 &copy;<script>document.write(new Date().getFullYear())</script> {{ config('app.name') }} Admin App made with
@@ -118,8 +117,12 @@
 <!-- App Script -->
 <script src="{{ asset('admin/assets/js/hope-ui.js')}}" defer></script>
 
-@stack('scripts')
-{{--
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<!-- Include SweetAlert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+@include('sweetalert::alert')
 
 @if(session('success'))
 <script>
@@ -159,8 +162,7 @@
 </script>
 @endif
 
-
---}}
+@stack('scripts')
 
 </body>
 </html>

@@ -9,13 +9,13 @@ use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
-    public function index()
+    public function show()
     {
         $user = Auth::user();
-        return view('admin.profile.index', compact('user'));
+        return view('admin.profile.show', compact('user'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
@@ -24,7 +24,7 @@ class ProfileController extends Controller
             'profile_img' => 'nullable'
         ]);
 
-        $user = User::find($id);
+        $user = Auth::user();
 
         $user->name = $data['name'];
         $user->email = $data['email'];

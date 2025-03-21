@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\User;
 use App\Models\Order;
 use App\Models\Review;
 use App\Models\Payment;
@@ -19,6 +20,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use App\Notifications\ClientBookingReceipt;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\AdminOrderNotification;
+use App\Notifications\ClientOrderConfirmation;
+use App\Notifications\AdminBookingNotification;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 
@@ -103,20 +109,36 @@ class HomeController extends Controller
         return view('checkout');
     }
 
+    private function formatShippingAddress($street, $city, $state, $zipcode, $country)
+    {
+        return implode(', ', array_filter([$street, $city, $state, $zipcode, $country]));
+    }
+
     public function checkoutAppointmentPost(Request $request)
     {
         $validated = $request->validate([
-            'service_id' => 'required',
-            'email' => 'required',
+            'service_id' => 'required|string',
+            'name' => 'required|string',
+            'email' => 'required|email',
             'date' => 'required|date',
             'time' => 'required|date_format:H:i',
             'gateway' => 'required',
             'payment_type' => 'required|string',
         ]);
 
+        $user = User::where('email', $validated['email'])->first();
+
+
+        if (!$user) {
+            $user = User::factory()->create([
+                'email' => $validated['email'],
+                'name' => $validated['name'],
+            ]);
+        }
+
         $appointment = Appointment::create([
             'service_id' => $request->service_id,
-            'user_id' => Auth::id(),
+            'user_id' => $user->id,
             'date' => $request->date,
             'time' => $request->time,
             'payment_type' => $request->payment_type,
@@ -136,7 +158,13 @@ class HomeController extends Controller
             $paymentStatusStripe = $this->paymentService->processStripe($appointment, $request->stripeToken);
 
             if ($paymentStatusStripe === 'succeeded') {
-                return redirect()->route('customer.booking.show', $appointment->id)->with('success', 'Credit/Debit card payment successful');
+                 // Notify the admin
+                 Notification::route('mail', env('ADMIN_EMAIL'))->notify(new AdminBookingNotification($appointment));
+
+                 // Notify the client
+                 Notification::route('mail', $appointment->user->email)->notify(new ClientBookingReceipt($appointment));
+                 
+                return redirect()->route('success')->with('success', 'Credit/Debit card payment successful');
             } else {
                 return redirect()->back()->with('error', 'Something went wrong while processing card payment');
             }
@@ -144,23 +172,36 @@ class HomeController extends Controller
     }
 
     public function checkoutOrderPost(Request $request)
-    {
-        $request->validate([
+    {        
+
+        $validated = $request->validate([
             'email' => 'required|email',
             'name' => 'required',
             'gateway' => 'required',
-            'user_id' => 'required',
             'total_price' => 'required',
+            'city' => 'required|string',
+            'state' => 'required|string',
+            'zipcode' => 'required|string',
+            'street_address' => 'required|string',
         ]);
 
-        $user = Auth::user();
+        $validated['country'] = 'USA';
+
+        $user = User::where('email', $validated['email'])->first();
 
         if (!$user) {
+            $user = User::factory()->create([
+                'email' => $request->email,
+                'name' => $request->name,
+            ]);
 
-            return redirect()->route('login')->with('error', 'Login first to checkout');
         }
 
-        $cartItems = $user->cart()->with('product')->get();
+        if(Auth::check()) {
+            $cartItems = auth()->user()->cart()->with('product')->get();
+        } else {
+            $cartItems = collect(Session::get('cart', []));
+        }
 
         if ($cartItems->isEmpty()) {
 
@@ -168,20 +209,35 @@ class HomeController extends Controller
         }
 
         $totalPrice = $cartItems->sum(function ($cartItem) {
+            if(is_array($cartItem)) {
+                $cartItem = (object) $cartItem;
+           }
             return $cartItem->quantity * $cartItem->product->price;
         });
 
         DB::beginTransaction();
         try {
             // 1. Create Order
+            $shippingAddress = $this->formatShippingAddress(
+                $request->input('street_address'),
+                $request->input('city'),
+                $request->input('state'),
+                $request->input('zipcode'),
+                $request->input('country')
+            );
+
             $order = Order::create([
                 'user_id' => $user->id,
                 'total_price' => $totalPrice,
-                'status' => 'Pending', // Will change after successful payment
+                'status' => 'Pending',
+                'shipping_address' => $shippingAddress,
             ]);
 
             // 2. Insert Order Items
             foreach ($cartItems as $cartItem) {
+                if(is_array($cartItem)) {
+                    $cartItem = (object) $cartItem;
+               }
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $cartItem->product_id,
@@ -207,7 +263,13 @@ class HomeController extends Controller
                 $paymentStatusStripe = $this->paymentService->processStripe($order, $request->stripeToken);
 
                 if ($paymentStatusStripe === 'succeeded') {
-                    return redirect()->route('customer.orders.show', $order->id)->with('success', 'Credit/Debit card payment successful');
+                     // Notify the admin
+                     Notification::route('mail', env('ADMIN_EMAIL'))->notify(new AdminOrderNotification($order));
+
+                     // Notify the client
+                     Notification::route('mail', $order->user->email)->notify(new ClientOrderConfirmation($order));
+
+                    return redirect()->route('success')->with('success', 'Credit/Debit card payment successful');
                 } else {
                     return redirect()->back()->with('error', 'Something went wrong while processing card payment');
                 }
@@ -237,16 +299,27 @@ class HomeController extends Controller
                     $order = $payment->payable;
                     $order->update(['payment_status' => 'paid']);
 
-                    return redirect()->route('customer.orders.show', $order->id)->with('success', 'Payment completed!');
+                     // Notify the admin
+                     Notification::route('mail', env('ADMIN_EMAIL'))->notify(new AdminOrderNotification($order));
+
+                     // Notify the client
+                     Notification::route('mail', $order->user->email)->notify(new ClientOrderConfirmation($order));
+
 
                 } else {
                     $payment->update(['status' => 'successful']);
                     $appointment = $payment->payable;
-                    $appointment->update(['status' => 'completed']);
+                     // Notify the admin
+                     Notification::route('mail', env('ADMIN_EMAIL'))->notify(new AdminBookingNotification($appointment));
 
-                    return redirect()->route('customer.booking.show', $appointment->id)->with('success', 'Payment completed!');
+                     // Notify the client
+                     Notification::route('mail', $appointment->user->email)->notify(new ClientBookingReceipt($appointment));
+
                 }
             }
+
+            return redirect()->route('success')->with('success', 'Payment successful');
+
 
 
         } else {
@@ -364,5 +437,9 @@ class HomeController extends Controller
     public function termsAndConditions()
     {
         return view('terms-and-conditions');
+    }
+
+    public function success() {
+        return view('payment-success');
     }
 }

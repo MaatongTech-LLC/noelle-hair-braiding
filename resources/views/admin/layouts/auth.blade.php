@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" dir="ltr" data-bs-theme="dark" data-bs-theme-color="theme-color-default">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -20,9 +20,6 @@
 
     <!-- Custom Css -->
     <link rel="stylesheet" href="{{ asset('admin/assets/css/custom.min.css') }}" />
-
-    <link rel="stylesheet" href="{{ asset('admin/assets/css/customizer.min.css') }}" />
-
 </head>
 <body class="">
 <!-- loader Start -->

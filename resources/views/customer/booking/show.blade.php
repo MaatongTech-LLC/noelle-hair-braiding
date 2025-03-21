@@ -18,7 +18,7 @@
                             @elseif ($appointment->status === 'cancelled')
                                 <p class="h4">Status:  <span class="badge bg-danger p-2">Cancelled</span></p>
                             @else
-                                <a class="btn btn-secondary mx-2" data-bs-toggle="modal" data-bs-target="#changeStatusModal">Change Status</a>
+                            <p class="h4">Status:  <span class="badge bg-warning p-2">Pending</span></p>
                             @endif
                             <a class="btn btn-primary mx-2" href="{{ route('customer.booking.index') }}">Back</a>
                         </div>
@@ -48,7 +48,7 @@
                         <!--Order Detail-->
                         <div class="row justify-content-between align-items-center g-3 mb-4">
                             <div class="col-auto flex-grow-1">
-                                <img src="{{ asset('assets/images/logo.png') }}"
+                                <img src="{{ asset('assets/images/logo-2.png') }}"
                                     alt="logo" class="img-fluid" width="200">
                             </div>
                             <div class="col-auto text-end">
@@ -98,21 +98,21 @@
                                         <h5 class="mb-2 ml-4"></h5>
                                         <p class="mb-0 text-wrap"></p>
                                     </div>
-                                </div>
+                                </div>    
                                 <div class="shipping-address d-flex justify-content-md-end mb-3">
                                     <div class="w-25">
                                         <h5 class="mb-2">Billing Address</h5>
                                         <p class="mb-0 text-wrap">{{ $appointment->billing_address ?? 'Unknown' }}</p>
                                     </div>
-                                    </div>
+                                    </div>    
                                 </div>
-
+                               
                             </div>
                         </div>
                     </div>
-
+    
                     <!--order details-->
-                    <table class="table table-bordered border-top text-dark" data-use-parent-width="true">
+                    <table class="table table-bordered border-top" data-use-parent-width="true">
                         <thead>
                             <tr>
                                 <th class="text-center" width="7%">#</th>
@@ -123,9 +123,9 @@
 
                             </tr>
                         </thead>
-
+    
                         <tbody>
-                            <tr class="text-white">
+                            <tr>
                                 <td class="text-center">1</td>
                                 <td>
                                     <div class="d-flex align-items-center">
@@ -152,7 +152,7 @@
                                 </td>
 
                             </tr>
-
+                            
                         </tbody>
                         <tfoot class="text-end">
                             <tr>
@@ -164,7 +164,7 @@
                             </tr>
                         </tfoot>
                     </table>
-
+    
                     <!--Note-->
                     <div class="card-body">
                         <div class="card-footer border-top-0 px-4 py-4 rounded bg-soft-gray border border-2">
@@ -173,41 +173,12 @@
                     </div>
                 </div>
             </div>
-
+    
         </div>
     </div>
 @endsection
 
-
-  <!-- Modal -->
-  <div class="modal fade" id="changeStatusModal" tabindex="-1" aria-labelledby="changeStatusModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="changeStatusModalLabel">Change Booking Status</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-
-            <form class="" action="{{ route('admin.booking.changeStatus', $appointment->id) }}" method="post">
-                @csrf
-                @method('PATCH')
-                <div class="modal-body">
-                    <input type="hidden" name="booking_id" value="{{ $appointment->id }}">
-                    <select name="status" class="form-control">
-                        <option value="cancelled" {{ $appointment->status ==='cancelled'?'selected' : '' }}>Cancel</option>
-                    </select>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Change Status</button>
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </form>
-
-
-      </div>
-    </div>
-  </div>
+  
 
 @push('scripts')
 

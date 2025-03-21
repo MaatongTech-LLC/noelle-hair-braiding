@@ -171,14 +171,8 @@
                             </ul>
                             <div class="btn_area d-flex justify-content-end">
                                 @if (count($items) > 0)
-                                    @auth
-                                        <a href="{{ route('checkout', ['checkout_type' => 'products_order']) }}"
-                                           class="btn-default">Checkout</a>
-
-                                    @endauth
-                                    @guest
-                                        <a href="{{ route('login') . '?next='. urlencode(route('checkout', ['checkout_type' => 'products_order'])) }}" class="btn  d-flex justify-content-center align-items-center common_btn_checkout ">PROCEED CHECKOUT</a>
-                                    @endguest
+                                <a href="{{ route('checkout', ['checkout_type' => 'products_order']) }}"
+                                    class="btn-default">Checkout</a>
                                 @endif
                             </div>
                         </div>

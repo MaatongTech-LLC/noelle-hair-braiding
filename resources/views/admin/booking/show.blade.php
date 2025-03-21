@@ -48,7 +48,7 @@
                         <!--Order Detail-->
                         <div class="row justify-content-between align-items-center g-3 mb-4">
                             <div class="col-auto flex-grow-1">
-                                <img src="{{ asset('assets/uploads/logo/logo.png') }}"
+                                <img src="{{ asset('assets/images/logo-2.png') }}"
                                     alt="logo" class="img-fluid" width="200">
                             </div>
                             <div class="col-auto text-end">
@@ -194,9 +194,9 @@
                 <div class="modal-body">
                     <input type="hidden" name="booking_id" value="{{ $appointment->id }}">
                     <select name="status" class="form-control">
-                        <option value="confirmed" {{ $appointment->status === 'confirmed'?'selected' : '' }}>Confirm</option>
-                        <option value="completed" {{ $appointment->status === 'completed'?'selected' : '' }}>Completed</option>
-                        <option value="cancelled" {{ $appointment->status ==='cancelled'?'selected' : '' }}>Cancel</option>
+                        @if(!in_array($appointment->status,['confirmed']))  <option value="confirmed" >Confirm</option> @endif
+                        @if(!in_array($appointment->status,['completed', 'pending']))  <option value="completed" >Complete</option> @endif
+                        @if(!in_array($appointment->status,['completed', 'cancelled', 'confirmed']))  <option value="cancelled" >Cancel</option> @endif
                     </select>
                 </div>
                

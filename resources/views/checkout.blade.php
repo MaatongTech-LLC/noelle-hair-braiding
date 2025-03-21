@@ -107,27 +107,32 @@
                              <div class="row">
                                  <h3>Client Information</h3>
                                  <div class="form-group col-md-6 mb-4">
-                                     <input type="text" name="name" class="form-control" id="name" value="{{ auth()->user()->name }}" placeholder="Name" required="">
+                                     <input type="text" name="name" class="form-control" id="name" value="@auth {{ auth()->user()->name }} @endauth" placeholder="Name" required="">
                                  </div>
 
                                  <div class="form-group col-md-6 mb-4">
-                                     <input type="email" name="email" class="form-control" id="email" value="{{ auth()->user()->email }}" placeholder="Email" required="">
+                                     <input type="email" name="email" class="form-control" id="email" value="@auth {{ auth()->user()->email }} @endauth" placeholder="Email" required="">
                                  </div>
 
                                  <div class="form-group col-md-6 mb-4">
-                                     <input type="tel" name="phone" class="form-control" id="phone" placeholder="Phone" required="">
+                                     <input type="tel" name="phone" class="form-control" id="phone" placeholder="Phone" required value="@auth {{ auth()->user()->phone }} @endauth">
                                  </div>
 
                                  <div class="form-group col-md-6 mb-4">
-                                     <input type="text" name="state" class="form-control" id="state" placeholder="State" required="">
+                                     <input type="text" name="state" class="form-control" id="state" placeholder="State" required>
                                  </div>
 
-                                 <div class="form-group col-md-6 mb-4">
-                                     <input type="text" name="city" class="form-control" id="city" placeholder="City" required="">
-                                 </div>
+                                 <div class="form-group mb-4 col-md-6">
+                                    <input id="city" class="form-control" name="city" placeholder="City / Town*" required>
+
+                                </div>
+                                <div class="form-group mb-4 col-md-6">
+                                    <input id="street_address" class="form-control" name="street_address" placeholder="Street Address*" required>
+
+                                </div>
 
                                  <div class="form-group col-md-6 mb-4">
-                                     <input type="text" name="zip_code" id="zip_code" placeholder="ZIP Code" class="form-control">
+                                     <input type="text" name="zipcode" id="zipcode" placeholder="ZIP Code" class="form-control">
                                  </div>
 
                                  <div class="row">
@@ -135,11 +140,11 @@
 
                                      <div class="form-group col-md-6">
                                          <label for="paypal">PayPal <img height="35px" src="{{ asset('assets/images/gateway/paypal.jpg') }}" alt=""></label>
-                                         <input type="radio" name="gateway" id="paypal" value="paypal">
+                                         <input type="radio" name="gateway" id="paypal" value="paypal" required>
                                      </div>
                                      <div class="form-group col-md-6">
                                          <label for="stripe">Credit / Debit Card <img height="35px" src="{{ asset('assets/images/gateway/stripe.jpg') }}" alt=""></label>
-                                         <input type="radio" name="gateway" id="stripe" value="stripe">
+                                         <input type="radio" name="gateway" id="stripe" value="stripe" required>
                                      </div>
                                  </div>
 
@@ -180,7 +185,7 @@
                                                    placeholder="Email Address*" required>
                                         </div>
                                         <div class="col-12">
-                                            <input type="text" class="form-control" name="phone" value=""
+                                            <input type="text" class="form-control" name="phone" value="@auth {{auth()->user()->phone}} @endauth"
                                                    placeholder="Phone Number*" required>
                                         </div>
                                         <div class="col-md-12">
@@ -199,7 +204,7 @@
                                                    placeholder="State*" required>
                                         </div>
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control" name="postcode" value=""
+                                            <input type="text" class="form-control" name="zipcode" value=""
                                                    placeholder="Zip / Postcode*" required>
                                         </div>
                                     </div>
@@ -287,10 +292,13 @@
                         <div id="card-element"></div>
                         <!-- Error Message -->
                         <div id="card-errors" role="alert" class="text-danger mt-2"></div>
-                        <input type="hidden" name="name" value="{{ auth()->user()->name }}">
-                        <input type="hidden" name="email" value="{{ auth()->user()->email }}">
-                        <input type="hidden" name="user_id" value="{{ auth()->id() }}">
+                        <input type="hidden" name="name" value="@auth {{ auth()->user()->name }} @endauth">
+                        <input type="hidden" name="email" value="@auth {{ auth()->user()->email }} @endauth">
                         <input type="hidden" name="total_price" value="{{ $subTotal }}">
+                        <input type="hidden" name="city" value="">
+                        <input type="hidden" name="state" value="">
+                        <input type="hidden" name="zipcode" value="">
+                        <input type="hidden" name="street_address" value="">
                         <input type="hidden" name="gateway" value="stripe">
                     </div>
                     <div class="modal-footer">
@@ -365,10 +373,9 @@
         $(document).ready(function(){
             $('#checkoutForm').on('submit', function(e) {
 
-
-                $("#billingDetailsForm").find("input, select, textarea").each(function() {
+                $("#checkoutForm").find("input, select, textarea").each(function() {
                     let name = $(this).attr("name")
-                    $(`#checkoutForm input[name="${name}"]`).val($(this).val());
+                    $(`#stripe-payment-form input[name="${name}"]`).val($(this).val());
                 });
 
             });

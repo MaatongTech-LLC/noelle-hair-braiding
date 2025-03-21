@@ -286,7 +286,7 @@
                 } else if (method === 'paypal') {
                     // Process other payment methods (e.g. redirect to PayPal)
                     $('#stripeCard').addClass('d-none');
-                    $('#checkoutForm')[0].submit();
+                    $('#bookingForm')[0].submit();
                 }
             });
 

@@ -26,20 +26,15 @@ Route::post('/cart', [CartController::class, 'cartPost'])->name('cart.post');
 Route::delete('/cart/delete/{id}', [CartController::class, 'cartDelete'])->name('cart.delete');
 Route::delete('/cart/clear', [CartController::class, 'cartClear'])->name('cart.clear');
 
-Route::middleware(CustomAuth::class)->group(function() {
-    // Route::middleware(CustomAuth::class)->post('/cart/merge', [CartController::class, 'mergeCart'])->name('cart.merge');
-
-    Route::get('/checkout', [HomeController::class, 'checkout'])->name('checkout');
-    Route::post('/checkout/appointment', [HomeController::class, 'checkoutAppointmentPost'])->name('checkout.appointment.post');
-    Route::post('/checkout/order', [HomeController::class, 'checkoutOrderPost'])->name('checkout.order.post');
-    Route::get('/paypal/success', [HomeController::class, 'paypalSuccess'])->name('paypal.success');
-    Route::get('/paypal/cancel', [HomeController::class, 'paypalCancel'])->name('paypal.cancel');
-    Route::get('/wishlist', [HomeController::class, 'wishlist'])->name('wishlist');
-    Route::get('/wishlist', [HomeController::class, 'wishlistPost'])->name('wishlist.post');
-    Route::post('/review', [HomeController::class, 'reviewPost'])->name('review.post');
-
-});
-
+Route::get('/checkout', [HomeController::class, 'checkout'])->name('checkout');
+Route::post('/checkout/appointment', [HomeController::class, 'checkoutAppointmentPost'])->name('checkout.appointment.post');
+Route::post('/checkout/order', [HomeController::class, 'checkoutOrderPost'])->name('checkout.order.post');
+Route::get('/paypal/success', [HomeController::class, 'paypalSuccess'])->name('paypal.success');
+Route::get('/paypal/cancel', [HomeController::class, 'paypalCancel'])->name('paypal.cancel');
+Route::get('/wishlist', [HomeController::class, 'wishlist'])->name('wishlist');
+Route::get('/wishlist', [HomeController::class, 'wishlistPost'])->name('wishlist.post');
+Route::post('/review', [HomeController::class, 'reviewPost'])->name('review.post');
+Route::get('success', [HomeController::class, 'success'])->name('success');
 
 Route::group(['prefix' => 'auth'], function() {
     Route::post('/logout', [AuthController::class, 'logout'])->middleware(CustomAuth::class)->name('logout');

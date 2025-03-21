@@ -74,8 +74,8 @@ Route::group(['prefix' => 'administration', 'middleware' => [CustomAuth::class, 
     Route::get('/payments', [PaymentController::class, 'index'])->name('admin.payments.index');
     Route::get('/payments/{id}', [PaymentController::class, 'show'])->name('admin.payments.show');
 
-    Route::get('/profile', [ProfileController::class, 'index'])->name('admin.profile.index');
-    Route::put('/profile/{id}', [ProfileController::class, 'update'])->name('admin.profile.update');
+    Route::get('/profile', [ProfileController::class, 'show'])->name('admin.profile.show');
+    Route::put('/profile/', [ProfileController::class, 'update'])->name('admin.profile.update');
 });
 
 

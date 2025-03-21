@@ -111,12 +111,16 @@
                                 <li>We believe that hair braiding is a fashionable accessory and form of art.</li>
                                 <li>Braids allow people to express their styles to connect to the world. Our experienced hairdressers provide neat, gorgeous,
                                     and stunning styles to make our clients feel confident and beautiful with a long- lasting trend at affordable prices.</li>
-                            </ul>
+                                <li>If you need curly hair color, please let us know in advance so we can confirm its availability in our store. We want to avoid any inconvenience, as your satisfaction is our top priority. We look forward to your visit!
+
+                                </li>
+                                <em style="color: var(--color-pink);">Please note that all prices may vary.<em>
+                                </ul>
 
                             <h6>BY BOOKING AN APPOINTMENT YOU AGREE THAT YOU HAVE READ AND UNDERSTAND ALL OUR POLICIES AND READY TO PROCEED.</h6>
 
                             If the information provided hasn’t answered your question, feel free to message us, or you can use the
-                            <a style="color: var(--color-pink)" href="{{ route('faq') }}">Q & A section</a>.
+                            <a style="color: var(--color-pink);" href="{{ route('faq') }}">Q & A section</a>.
 
                             THANK YOU FOR CHOOSING NOELLE PROFESSIONAL HAIR BRAIDING
 
