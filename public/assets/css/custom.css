@@ -1155,7 +1155,7 @@ header.main-header .header-sticky.active{
 	flex-wrap: wrap;
 	gap: var(--photo-gap);
 	min-width: 100%;
-	animation: photoscroll 120s linear infinite;
+	animation: photoscroll 200s linear infinite;
 }
 
 .photo-gallery-item{

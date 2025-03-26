@@ -95,7 +95,7 @@
                                 <div class="about-year-image">
                                     <div class="about-year">
                                         <p>Since</p>
-                                        <h4 class="counter">2019</h4>
+                                        <h4 class="counter">2014</h4>
                                     </div>
 
                                     <div class="about-img left-shape">

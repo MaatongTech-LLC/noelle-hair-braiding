@@ -209,6 +209,13 @@
                                     <!-- Error Message -->
                                     <div id="card-errors" role="alert" class="text-danger mt-2"></div>
                                 </div>
+                                <div class="col-md-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="terms" required />
+                                        <label class="form-check-label" for="">You agree to our <a href="{{ route('terms-and-conditions') }}" target="_blank" style="color: var(--color-pink);">Terms and Conditions</a> </label>
+                                    </div>
+                                   
+                                </div>
 
                                 <div class="col-md-12 text-center">
                                     <button type="submit" class="btn-default">Checkout</button>

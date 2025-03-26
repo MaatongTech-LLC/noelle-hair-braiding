@@ -147,6 +147,13 @@
                                          <input type="radio" name="gateway" id="stripe" value="stripe" required>
                                      </div>
                                  </div>
+                                 <div class="col-md-12 mt-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="terms" required />
+                                        <label class="form-check-label" for="">You agree to our <a href="{{ route('terms-and-conditions') }}" target="_blank" style="color: var(--color-pink);">Terms and Conditions</a> </label>
+                                    </div>
+                                   
+                                </div>
 
                                  <div class="col-md-12 my-3">
                                      <button type="submit" class="btn-default">Pay Now</button>

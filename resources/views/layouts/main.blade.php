@@ -51,6 +51,29 @@
 </div>
 <!-- Magic Cursor End -->
 
+<div class="features-ticker">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <p><i class="fa fa-location-dot"></i> Cincinnati 45240 Springdale, OH, United States</p>
+            </div>
+
+            <div class="col-md-6 d-flex gap-1">
+                <p><i class="fa fa-envelope"></i> contact@noellehairbraiding.com </p>
+                <p><i class="fa fa-phone-alt"></i> +1 630-280-1143</p>
+                <div class="footer-menu">
+                    <ul class="d-flex list-none">
+                        <li><a href="https://www.facebook.com/share/1B8xbkxmfi/"><i class="fab fa-facebook-f"></i></a></li>
+                        <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                        <li><a href="https://www.tiktok.com/t/ZP8Y4E6R5/"><i class="fab fa-tiktok"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
 <!-- Header Start -->
 <header class="main-header">
     <div class="header-sticky">
@@ -199,7 +222,7 @@
     <div class="footer-main">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-lg-5">
+                <div class="col-lg-4">
                     <!-- Footer Logo Start -->
                     <div class="footer-logo">
                         <img src="{{ asset('assets/images/logo.png') }}" height="135px" alt="">
@@ -217,7 +240,7 @@
                     <!-- Footer Social Icons End -->
                 </div>
 
-                <div class="col-lg-7">
+                <div class="col-lg-8">
                     <!-- Footer Menu Start -->
                     <div class="footer-menu">
                         <ul>
@@ -235,7 +258,7 @@
 
                     <!-- Footer Copyright Start -->
                     <div class="copyright">
-                        <p>Copyright &copy; {{ date('Y') . ' ' . config('app.name')}}. All Rights Reserved.</p>
+                        <p>Copyright &copy; {{ date('Y') . ' ' . config('app.name')}}. All Rights Reserved | Powered by <a href="https://maatonggroup.com/usa" target="_blank" style="color: var(--color-pink);">MaatongTech USA LLC</a></p>
                     </div>
                     <!-- Footer Copyright End -->
                 </div>
