@@ -50,7 +50,7 @@
                     <div class="page-header-icon-box wow fadeInUp" data-wow-delay="0.5s"
                         style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInUp;">
                         <div class="page-header-icon">
-                            <img src="{{ asset('assets/images/icon-notfound.svg') }}" alt="">
+                            <img src="{{ asset('assets/images/icon-success.svg') }}" alt="">
                         </div>
                     </div>
                     <!-- Page Header Right Icon End -->

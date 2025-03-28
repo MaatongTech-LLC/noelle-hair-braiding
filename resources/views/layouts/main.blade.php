@@ -54,13 +54,16 @@
 <div class="features-ticker">
     <div class="container">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <p><i class="fa fa-location-dot"></i> Cincinnati 45240 Springdale, OH, United States</p>
             </div>
-
-            <div class="col-md-6 d-flex gap-1">
-                <p><i class="fa fa-envelope"></i> contact@noellehairbraiding.com </p>
+            <div class="col-md-3">
+                <p><i class="fa fa-envelope"></i> info@noellehairbraiding.com </p>
+            </div>
+            <div class="col-md-3">
                 <p><i class="fa fa-phone-alt"></i> +1 630-280-1143</p>
+            </div>
+            <div class="col-md-2">
                 <div class="footer-menu">
                     <ul class="d-flex list-none">
                         <li><a href="https://www.facebook.com/share/1B8xbkxmfi/"><i class="fab fa-facebook-f"></i></a></li>
@@ -69,7 +72,6 @@
                     </ul>
                 </div>
             </div>
-            
         </div>
     </div>
 </div>
@@ -196,7 +198,7 @@
                         </div>
 
                         <h3>Get in Touch</h3>
-                        <p>Phone: +1 630-280-1143 <br>Email: contact@noellehairbraiding.com</p>
+                        <p>Phone: +1 630-280-1143 <br>Email: info@noellehairbraiding.com</p>
                     </div>
                     <!-- Footer Contact Info Box End -->
                 </div>

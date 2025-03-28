@@ -212,13 +212,13 @@
                                 <div class="col-md-12">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" id="terms" required />
-                                        <label class="form-check-label" for="">You agree to our <a href="{{ route('terms-and-conditions') }}" target="_blank" style="color: var(--color-pink);">Terms and Conditions</a> </label>
+                                        <label class="form-check-label" for="terms">You agree to our <a href="{{ route('terms-and-conditions') }}" target="_blank" style="color: var(--color-pink);">Terms and Conditions</a> </label>
                                     </div>
                                    
                                 </div>
 
                                 <div class="col-md-12 text-center">
-                                    <button type="submit" class="btn-default">Checkout</button>
+                                    <button id="checkoutSubmitBtn" type="submit" class="btn-default">Checkout</button>
                                 </div>
 
                             </div>
@@ -280,21 +280,20 @@
                 }
             });
 
+            $('input[name="gateway"]').change(function() {
+                if ($(this).val() === 'stripe') {
+                    $('#stripeCard').removeClass('d-none');
+                } else {
+                    $('#stripeCard').addClass('d-none');
+                }
+            })
+
             // Listen for the payment method form submission
             $('#bookingForm').on('submit', function(e) {
 
-                e.preventDefault();
-
-                const method = $('input[name="gateway"]:checked').val();
-                if (method === 'stripe') {
-                    // Open the Stripe modal
-                    $('#stripeCard').removeClass('d-none');
-
-                } else if (method === 'paypal') {
-                    // Process other payment methods (e.g. redirect to PayPal)
-                    $('#stripeCard').addClass('d-none');
-                    $('#bookingForm')[0].submit();
-                }
+                e.preventDefault(); // Empêcher la soumission réelle pour test
+                $('#checkoutSubmitBtn').prop('disabled', true).text('Payment Processing...');
+                
             });
 
             // Handle the Stripe payment form submission inside the modal

@@ -83,7 +83,7 @@
                         </div>
 
                         <h3>Email</h3>
-                        <p>contact@noellehairbraiding.com</p>
+                        <p>info@noellehairbraiding.com</p>
                     </div>
                     <!-- Contact Box End -->
                 </div>

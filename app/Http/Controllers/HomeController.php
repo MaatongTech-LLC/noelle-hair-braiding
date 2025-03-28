@@ -247,7 +247,12 @@ class HomeController extends Controller
             }
 
             // 3. Clear Cart
-            $user->cart()->delete();
+            if (Auth::check()) {
+                $user->cart()->delete();
+
+            } else {
+                Session::forget('cart');
+            }
 
             DB::commit();
 

@@ -150,7 +150,7 @@
                                  <div class="col-md-12 mt-4">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" id="terms" required />
-                                        <label class="form-check-label" for="">You agree to our <a href="{{ route('terms-and-conditions') }}" target="_blank" style="color: var(--color-pink);">Terms and Conditions</a> </label>
+                                        <label class="form-check-label" for="terms">You agree to our <a href="{{ route('terms-and-conditions') }}" target="_blank" style="color: var(--color-pink);">Terms and Conditions</a> </label>
                                     </div>
                                    
                                 </div>
@@ -309,7 +309,7 @@
                         <input type="hidden" name="gateway" value="stripe">
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">Submit Payment</button>
+                        <button type="submit" id="stripePaymentBtn" class="btn btn-success">Submit Payment</button>
                     </div>
                 </form>
             </div>
@@ -337,6 +337,7 @@
                     displayError.textContent = '';
                 }
             });
+            
 
             // Listen for the payment method form submission
             $('#checkoutForm').on('submit', function(e) {
@@ -371,6 +372,8 @@
                     hiddenInput.setAttribute('name', 'stripeToken');
                     hiddenInput.setAttribute('value', token.id);
                     stripeForm.appendChild(hiddenInput);
+
+                    $('#stripePaymentBtn').prop('disabled', true).text('Payment Processing...');
                     stripeForm.submit();
                 }
             });
